@@ -1,6 +1,8 @@
 let nextPlayer = 'X'; // takes a value of either 'X' or 'O' according to the game turns
 
 //initalize the game by setting the value inside next-lbl to nextPlayer
+document.getElementById("next-lbl").innerText = nextPlayer;
+
 //hint: you could use innerText for this 
 
 //This call will create the buttons needed for the gameboard.
@@ -9,7 +11,10 @@ createGameBoard()
 function createGameBoard()
 {
     // Programatically add a button with square brackets enclosing an empty space to each cell in the gameboard
-   
+   for (let i = 1; i <= 9; i++) {
+        let cell = document.getElementById("c" + i);
+        cell.innerHTML = '<button>[ ]</button>';
+    }
 
     // Programatically add 'takeCell' as an event listener to all the buttons on the board
     let btns = document.querySelectorAll('button');
@@ -22,6 +27,7 @@ function createGameBoard()
             the event to takeCell. Review the slides for the trick on how to ]
             pass a parameter.
         */
+                btns[i].addEventListener("click", takeCell);
     }
 }
 
@@ -31,13 +37,20 @@ function takeCell(event)
     /*
         When the button is clicked, the space inside its square brackets is replaced by the value in the nextPlayer before switching it
     */
+        event.target.innerText = `[${nextPlayer}]`;
 
-    // Make sure the button is clickable only once (I didn't mention how to do that, look it up :) )
+    // Make sure the button is clickable only once (I didn't mention how to do that, look it up :) thanks)
+    event.target.disabled = true;
+    nextPlayer = (nextPlayer === 'X') ? 'O' : 'X';
+    
+    document.getElementById('next-lbl').innerText = nextPlayer;
 
-    // Check if the game is over
+
+    // Check if the game is over, it is, its over
     if (isGameOver())
     {
         // let the label with the id 'game-over-lbl' display the words 'Game Over' inside <h1> element
+        document.getElementById('game-over-lbl').innerHTML = '<h1>Game Over</h1>';
     }
 
     // I'll leave declaring the winner for your intrinsic motivation, it's not required for this assignment 
@@ -46,4 +59,12 @@ function takeCell(event)
 function isGameOver()
 {
     // This function returns true if all the buttons are disabled and false otherwise 
+    let btns = document.querySelectorAll('button');
+    for (let i=0; i<btns.length; i++)
+    {
+        if (!btns[i].disabled) {
+            return false;
+        }
+    }
+    return true;
 }
